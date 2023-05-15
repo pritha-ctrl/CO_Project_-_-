@@ -192,7 +192,7 @@ def print_type_E(instruction):
 #TYPE F FUNCTIONS
 def check_error_type_F(instruction,line):
     if len(instruction)!=1:
-        output.append("hlt instruction shouldn't have any parameters, line = "+str(line))
+        output.append("Error: hlt instruction shouldn't have any parameters, line = "+str(line))
         return 0
     else:
         return 1
@@ -215,13 +215,13 @@ for j in range(0,len(l)):
 
     # Invalid Codes
     if i[0] not in opcode.keys() and i[0] != "var" and ":" not in i[0]:
-        output.append("Typos in instruction name or register name, line "+str(program_counter+temp_counter+1))
+        output.append("Error: Typos in instruction name or register name, line "+str(program_counter+temp_counter+1))
         error=1
         break
 
     # hlt not used at last
     if i[-1]=="hlt" and j!=len(l)-1:
-        output.append("hlt not being used as the last instruction, line "+str(program_counter+temp_counter+1))
+        output.append("Error: hlt not being used as the last instruction, line "+str(program_counter+temp_counter+1))
         error=1
         break
 
@@ -241,7 +241,7 @@ for j in range(0,len(l)):
 
     # variable not declared at start
     if i[0]=="var" and program_counter!=0:
-        output.append("Variables not declared at the beginning, line "+str(program_counter+temp_counter+1))
+        output.append("Error: Variables not declared at the beginning, line "+str(program_counter+temp_counter+1))
         error=1
         break
 
@@ -261,7 +261,11 @@ for i in variable_values.keys():
 
 # missing hlt instruction-2
 if htl_count==0 and error==0:
-    output.append("Missing hlt instruction")
+    output.append("Error: Missing hlt instruction")
+    error=1
+
+if error==0 and len(list(instructions_with_pc.keys())) > 128:
+    output.append("Error: Length of instructions is more than 128")
     error=1
 
 
@@ -317,7 +321,7 @@ if error==0:
         for i in l:
             output.append(listToString(i))
         # adding line break
-        output.append("************binary***********")
+        output.append("************binary**code************")
 
         # adding machine lang codes
         for keys in instructions_with_pc:
